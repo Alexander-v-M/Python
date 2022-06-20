@@ -1,0 +1,44 @@
+import matplotlib.pyplot as plt
+
+b = list(
+    2 + i for i in range(
+        int(
+            input(
+                'Range: '
+            )
+        )
+    )
+)
+
+
+# funcie die ehm ja dit berekend spul (dit werkt)
+def function(x):
+    if x % 2 == 1:
+        # als x is oneven doe dit
+        return int(3 * x + 1)
+    else:
+        # als x is even doe dit
+        return int(x / 2)
+
+
+# maakt een list waarbij  a steeds door 'def: functie' wordt gehaald tot dat a 1 is
+def make_list(a):
+    list_func = []
+    while a != 1:
+        list_func.append(a)
+        if a == 2:
+            break
+        a = function(a)
+    if list_func[-1] == 2:
+        list_func.append(1)
+    return list_func
+
+
+# plot grafieken
+dic = dict.fromkeys(range(len(b)))
+for i in range(len(b)):
+    dic[i] = make_list(b[i])
+
+for i in range(len(b)):
+    plt.plot(dic[i])
+plt.show()
