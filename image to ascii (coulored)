@@ -1,0 +1,53 @@
+from PIL import Image, ImageDraw, ImageFont
+
+import math
+
+# insert path to photo
+foto = 'sonic.jpg'
+# define scale
+scale = 0.5
+# modify characters
+chars = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,^`'. " [::-1]
+
+char_array = list(chars)
+char_len = len(char_array)
+interval = char_len / 256
+one_char_width = 8
+one_char_height = 14
+
+
+def getchar(intp):
+    return char_array[math.floor(intp * interval)]
+
+
+text_file = open('Output.txt', 'w')
+fnt = ImageFont.truetype('C:\\Windows\\Fonts\\Lucon.ttf', 15)
+
+if foto.endswith('.png'):
+    image = Image.open(rf"{foto}").convert("RGB")
+elif foto.endswith('.jpg'):
+    image = Image.open(rf"{foto}")
+else:
+    print('Error, enter png of jpg only')
+
+width, height = image.size
+image = image.resize((int(scale * width),
+                      int(scale * height * (one_char_width / one_char_height))))
+width, height = image.size
+pix = image.load()
+output_image = Image.new('RGB', (one_char_width * width, one_char_height * height), color=(0, 0, 0))
+d = ImageDraw.Draw(output_image)
+
+for i in range(height):
+    for j in range(width):
+        r, g, b = pix[j, i]
+        h = int(r / 3 + g / 3 + b / 3)
+        pix[j, i] = (h, h, h)
+        text_file.write(getchar(h))
+        d.text(
+            (j * one_char_width, i * one_char_height),
+            getchar(h), font=fnt, fill=(r, g, b))
+
+    text_file.write('\n')
+
+output_image.save("output_image.png")
